@@ -27,7 +27,7 @@
         name: nginx_image:v1
         source: build
         build:
-          path: /root/project/
+          path: /root/project1/
         state: present
 
     - name: Create and start the container
