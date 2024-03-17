@@ -1,0 +1,40 @@
+---
+- hosts: all
+  gather_facts: false
+  remote_user: root
+  tasks:
+
+    - name: Stop the container if running
+      docker_container:
+        name: nginx_container
+        state: stopped
+      ignore_errors: true
+
+    - name: Remove the container
+      docker_container:
+        name: nginx_container
+        state: absent
+      ignore_errors: true
+
+    - name: Remove the Docker image if it exists
+      docker_image:
+        name: nginx_image:v1
+        state: absent
+      ignore_errors: true
+
+    - name: Build the Docker image
+      docker_image:
+        name: nginx_image:v1
+        source: build
+        build:
+          path: /root/project/
+        state: present
+
+    - name: Create and start the container
+      docker_container:
+        name: nginx_container
+        image: nginx_image:v1
+        ports:
+          - "80:80"
+        state: started
+
